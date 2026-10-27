@@ -29,11 +29,9 @@
     <div id="loginScreen" class="fixed inset-0 z-[600] bg-white p-8 flex flex-col justify-center items-center">
         <div class="w-full max-sm:max-w-xs space-y-6">
             <div class="text-center">
-    <div class="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl text-white text-3xl">
-        <i class="fas fa-mosque"></i>
-    </div>
-    <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight leading-tight">Absensi Piket Sholat Dhuha<br><span class="text-emerald-600 text-lg">MTsN 3 Banyuwangi</span></h1>
-</div>
+                <div class="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl text-white text-3xl">
+                    <i class="fas fa-mosque"></i>
+                </div>
                 <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight leading-tight">Absensi Piket Sholat Dhuha<br><span class="text-emerald-600 text-lg">MTsN 3 Banyuwangi</span></h1>
             </div>
             
@@ -297,7 +295,7 @@
         </nav>
     </div>
 
-    <!-- MODAL FOTO VIEW (TELAH DIUPGRADE UNTUK MENCEGAH ERROR CORS) -->
+    <!-- MODAL FOTO VIEW -->
     <div id="imageModal" class="fixed inset-0 z-[800] bg-black/90 backdrop-blur-sm hidden items-center justify-center p-4 flex-col">
         <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white bg-white/20 hover:bg-white/40 rounded-full w-12 h-12 flex items-center justify-center backdrop-blur-md transition-all z-50">
             <i class="fas fa-times text-2xl"></i>
@@ -306,7 +304,6 @@
             <div id="imageLoading" class="absolute inset-0 flex items-center justify-center text-white">
                 <i class="fas fa-spinner fa-spin text-4xl"></i>
             </div>
-            <!-- Fungsi on-load dan on-error ditangani penuh di JavaScript -->
             <img id="previewImage" src="" class="w-full h-auto max-h-[80vh] object-contain rounded-2xl relative z-10 hidden">
         </div>
         <a id="downloadImageBtn" href="" target="_blank" class="mt-6 bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 active:scale-95 transition-all">
@@ -376,6 +373,14 @@
         // ========================================================
         var GAS_URL = "https://script.google.com/macros/s/AKfycbwUGzLAozoiwj1EvfKHSweVhE71wOjbsQbzsMzhpJMSu5RzJ8INnCLx2CR5U_YW1CpD5g/exec";
         
+        // --- KAMUS GLOBAL UNTUK MENGUBAH UUID JADI NAMA ASLI ---
+        var globalGtkMap = {};
+        function getRealName(rawStr) {
+            if (!rawStr) return '-';
+            var clean = String(rawStr).trim();
+            return globalGtkMap[clean] || clean; // Jika ada di kamus, ubah. Jika tidak, biarkan aslinya.
+        }
+
         function callGAS(action, data, onSuccess, onError) {
             fetch(GAS_URL, {
                 method: 'POST',
@@ -412,7 +417,7 @@
         window.onload = function() {
             startTime();
             toggleLoginType();
-            loadGtkNames();
+            
             try {
                 var cachedOffice = localStorage.getItem('presensi_office_v3');
                 if (cachedOffice) {
@@ -421,14 +426,19 @@
                     if (parsed.gpsReq) office.gpsReq = parsed.gpsReq;
                 }
             } catch(e){}
-            try {
-                var saved = localStorage.getItem('presensi_5s_user');
-                if (saved) { user = JSON.parse(saved); setupApp(); }
-            } catch(err) {}
+            
+            // Tunggu nama selesai dimuat terlebih dahulu, agar UUID terjemahannya siap
+            loadGtkNames(function() {
+                try {
+                    // Pastikan menggunakan penyimpanan lokal baru agar tidak bentrok dengan aplikasi lama
+                    var saved = localStorage.getItem('presensi_dhuha_user');
+                    if (saved) { user = JSON.parse(saved); setupApp(); }
+                } catch(err) {}
+            });
         };
 
         // ========================================================
-        // FUNGSI POP-UP FOTO (MENGATASI BLOKIR GOOGLE DRIVE)
+        // FUNGSI POP-UP FOTO
         // ========================================================
         function openImageModal(url) {
             if (!url) return;
@@ -437,34 +447,27 @@
             var loader = document.getElementById('imageLoading');
             var btn = document.getElementById('downloadImageBtn');
             
-            // Reset status loading
             img.classList.add('hidden');
             loader.classList.remove('hidden');
             loader.innerHTML = '<i class="fas fa-spinner fa-spin text-4xl"></i>';
             
-            // Mencari File ID dari URL Drive
             var match = url.match(/\/d\/(.*?)\//);
             var fileId = match ? match[1] : null;
             
-            // Jika berhasil dimuat
             img.onload = function() {
                 loader.classList.add('hidden');
                 img.classList.remove('hidden');
             };
             
-            // Jika Diblokir oleh browser (CORS/Cookies)
             img.onerror = function() {
                 if (fileId && !img.src.includes('thumbnail')) {
-                    // Coba jalur alternatif (Thumbnail API)
                     img.src = 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1000';
                 } else {
-                    // Jika jalur alternatif juga gagal, minta user buka full screen
                     loader.innerHTML = '<span class="text-sm text-center px-4 leading-relaxed text-white">Browser mencegah pratinjau gambar ini.<br><br>Silakan klik tombol <b>Buka Ukuran Penuh</b> di bawah.</span>';
                 }
             };
             
             if (fileId) {
-                // Trik Utama 2024: lh3.googleusercontent
                 img.src = 'https://lh3.googleusercontent.com/d/' + fileId;
             } else {
                 img.src = url;
@@ -479,17 +482,43 @@
             document.getElementById('previewImage').src = '';
         }
 
-        function loadGtkNames() {
+        // ========================================================
+        // PERBAIKAN: MENGGUNAKAN GETUSERS UNTUK MENDAPAT NAMA DAN ID
+        // ========================================================
+        function loadGtkNames(onComplete) {
             var sel = document.getElementById('loginName');
             sel.innerHTML = '<option value="">Memuat daftar GTK...</option>';
-            callGAS('getGtkNames', {}, function(names) {
-                if (names && names.length > 0) {
-                    var html = '<option value="">-- Pilih Nama GTK --</option>';
-                    for(var i=0; i<names.length; i++) html += '<option value="' + names[i] + '">' + names[i] + '</option>';
+            
+            // Kita bypass 'getGtkNames' yang error, kita gunakan 'getUsers' yang dijamin aman
+            callGAS('getUsers', {}, function(data) {
+                var html = '<option value="">-- Pilih Nama GTK --</option>';
+                if (data && data.length > 0) {
+                    for(var i = 0; i < data.length; i++) {
+                        var uRow = data[i];
+                        var uId = String(uRow[0]).trim();
+                        var uNama = String(uRow[1]).trim();
+                        var uRole = String(uRow[4] || 'GTK').toUpperCase();
+                        
+                        // Simpan ke kamus UUID
+                        if(uId && uNama) {
+                            globalGtkMap[uId] = uNama;
+                            globalGtkMap[uNama] = uNama; 
+                        }
+                        
+                        // Masukkan hanya guru ke dropdown login
+                        if (uRole === 'GTK' && uId && uId !== 'undefined') {
+                            html += '<option value="' + uId + '">' + uNama + '</option>';
+                        }
+                    }
                     sel.innerHTML = html;
-                } else { sel.innerHTML = '<option value="">(Data Kosong)</option>'; }
+                } else { 
+                    sel.innerHTML = '<option value="">(Data Kosong)</option>'; 
+                }
+                
+                if (typeof onComplete === 'function') onComplete();
             }, function(err) {
-                sel.innerHTML = '<option value="">(Error: Refresh browser)</option>';
+                sel.innerHTML = '<option value="">(Gagal memuat. Refresh browser)</option>';
+                if (typeof onComplete === 'function') onComplete();
             });
         }
 
@@ -540,7 +569,7 @@
                     btn.innerHTML = 'MASUK APLIKASI'; btn.disabled = false;
                     if (res && res.success) {
                         user = res.user; 
-                        try { localStorage.setItem('presensi_5s_user', JSON.stringify(user)); } catch(e){} 
+                        try { localStorage.setItem('presensi_dhuha_user', JSON.stringify(user)); } catch(e){} 
                         setupApp();
                     } else { showToast(res.message || "Gagal Login"); }
                 }, function(err) { 
@@ -552,7 +581,11 @@
 
         function handleLogout() {
             try {
-                try { localStorage.removeItem('presensi_5s_user'); } catch(e){}
+                try { 
+                    localStorage.removeItem('presensi_dhuha_user'); 
+                    localStorage.removeItem('presensi_5s_user'); 
+                } catch(e){}
+                
                 user = null; 
                 document.getElementById('app').classList.add('hidden');
                 document.getElementById('loginScreen').classList.remove('hidden');
@@ -579,7 +612,9 @@
         function setupApp() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            document.getElementById('userName').innerText = user.nama;
+            
+            // Tampilkan nama dengan Kamus Penerjemah UUID
+            document.getElementById('userName').innerText = getRealName(user.nama);
             document.getElementById('gpsStatus').style.display = 'flex';
             
             if (user.role === 'admin') {
@@ -821,7 +856,9 @@
                         var rowBg = i % 2 === 0 ? 'bg-white' : 'bg-slate-50';
                         
                         tbody += '<tr class="'+rowBg+' hover:bg-emerald-50 transition-colors">';
-                        tbody += '<td class="py-2 px-2 font-bold text-gray-900 whitespace-nowrap sticky left-0 z-10 '+rowBg+' shadow-[1px_0_0_#e2e8f0]">' + d.nama + '</td>';
+                        
+                        // TERJEMAHAN NAMA REKAP DISINI
+                        tbody += '<td class="py-2 px-2 font-bold text-gray-900 whitespace-nowrap sticky left-0 z-10 '+rowBg+' shadow-[1px_0_0_#e2e8f0]">' + getRealName(d.nama) + '</td>';
                         
                         for(var w = 1; w <= numWeeks; w++) {
                             var wk = d["w" + w];
@@ -959,9 +996,11 @@
                                     var stsBadge = '<br><span class="px-2 py-0.5 rounded text-[8px] font-black uppercase inline-block mt-1 ' + badgeColor + '">' + badgeText + '</span>';
                                     var linkFoto = gtk.foto ? '<button onclick="openImageModal(\''+gtk.foto+'\')" class="text-blue-500 font-bold text-[10px] active:scale-95 bg-blue-50 px-2 py-1 rounded-md"><i class="fas fa-image"></i> Cek</button>' : '<span class="text-gray-300">-</span>';
                                     
-                                    hHtml += '<tr class="bg-white border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + gtk.nama + stsBadge + '</td><td class="py-3 px-3 text-center text-gray-600">' + gtk.hari + '</td><td class="py-3 px-3 text-center">' + linkFoto + '</td></tr>';
+                                    // TERJEMAHAN NAMA MONITORING (HADIR)
+                                    hHtml += '<tr class="bg-white border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + getRealName(gtk.nama) + stsBadge + '</td><td class="py-3 px-3 text-center text-gray-600">' + gtk.hari + '</td><td class="py-3 px-3 text-center">' + linkFoto + '</td></tr>';
                                 } else {
-                                    bHtml += '<tr class="bg-gray-50 border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + gtk.nama + '</td><td class="py-3 px-3 text-center text-gray-600">' + gtk.hari + '</td><td class="py-3 px-3 text-center"><span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-[9px] font-black uppercase">Belum Hadir</span></td></tr>';
+                                    // TERJEMAHAN NAMA MONITORING (BELUM)
+                                    bHtml += '<tr class="bg-gray-50 border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + getRealName(gtk.nama) + '</td><td class="py-3 px-3 text-center text-gray-600">' + gtk.hari + '</td><td class="py-3 px-3 text-center"><span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-[9px] font-black uppercase">Belum Hadir</span></td></tr>';
                                 }
                             }
                             
@@ -1018,7 +1057,8 @@
                     var stsColor = stsText === 'Hadir' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600';
                     var link = a[10] ? '<button onclick="openImageModal(\''+a[10]+'\')" class="bg-blue-50 text-blue-500 px-2 py-1 rounded-md text-[10px] font-bold active:scale-95"><i class="fas fa-image"></i> Cek</button>' : '-';
                     
-                    aHtml += '<tr class="'+(i % 2 === 0 ? 'bg-white' : 'bg-gray-50')+' border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + a[a.length - 1] + '</td><td class="py-3 px-3 font-bold text-gray-600">' + a[2] + '</td><td class="py-3 px-3 font-bold text-emerald-600">' + a[3] + '</td><td class="py-3 px-3 text-center"><span class="px-2 py-1 rounded-lg text-[9px] font-black uppercase '+stsColor+'">' + stsText + '</span></td><td class="py-3 px-3 text-center">' + link + '</td></tr>';
+                    // TERJEMAHAN NAMA LOG ABSEN DISINI
+                    aHtml += '<tr class="'+(i % 2 === 0 ? 'bg-white' : 'bg-gray-50')+' border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + getRealName(a[a.length - 1]) + '</td><td class="py-3 px-3 font-bold text-gray-600">' + a[2] + '</td><td class="py-3 px-3 font-bold text-emerald-600">' + a[3] + '</td><td class="py-3 px-3 text-center"><span class="px-2 py-1 rounded-lg text-[9px] font-black uppercase '+stsColor+'">' + stsText + '</span></td><td class="py-3 px-3 text-center">' + link + '</td></tr>';
                 }
                 document.getElementById('adminAbsenceLog').innerHTML = aHtml;
             });
