@@ -184,43 +184,55 @@
             </div>
         </main>
 
-        <main id="tab-setting" class="tab-content p-6 space-y-6">
-            <h2 class="text-2xl font-black text-gray-900">Setting Waktu & Radius</h2>
-            <div class="bg-slate-900 p-6 rounded-[2.5rem] text-white shadow-xl">
-                
-                <div class="bg-white/5 p-4 rounded-2xl mb-6 border border-white/10 text-center">
-                    <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-full flex justify-center items-center mx-auto mb-2"><i class="fas fa-map-pin"></i></div>
-                    <p class="text-[10px] text-gray-400 uppercase font-bold mb-1 tracking-widest">Titik Sekolah Terkunci</p>
-                    <p class="text-sm font-black text-white">-8.403045, 114.262155</p>
+       <main id="tab-setting" class="tab-content p-6 space-y-6">
+    <h2 class="text-2xl font-black text-gray-900">Setting Waktu & Radius</h2>
+    <div class="bg-slate-900 p-6 rounded-[2.5rem] text-white shadow-xl">
+        
+        <div class="bg-white/5 p-4 rounded-2xl mb-6 border border-white/10 text-center">
+            <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-full flex justify-center items-center mx-auto mb-2"><i class="fas fa-map-pin"></i></div>
+            <p class="text-[10px] text-gray-400 uppercase font-bold mb-1 tracking-widest">Titik Sekolah Terkunci</p>
+            <p class="text-sm font-black text-white" id="text-koordinat">-8.403045, 114.262155</p>
+        </div>
+
+        <div class="space-y-4">
+            <!-- TAMBAHAN: Input Latitude dan Longitude -->
+            <div class="grid grid-cols-2 gap-2 mb-2">
+                <div class="bg-white/10 p-3 rounded-2xl">
+                    <p class="text-[8px] text-gray-400 uppercase font-bold mb-1">Latitude</p>
+                    <input type="number" step="any" id="adm-lat" class="w-full bg-transparent text-xs outline-none text-white font-bold">
                 </div>
-
-                <div class="space-y-4">
-                    <div class="bg-white/10 p-3 rounded-2xl col-span-2">
-                        <p class="text-[8px] text-gray-400 uppercase font-bold mb-1">Status GPS</p>
-                        <select id="adm-gps" class="w-full bg-white text-xs outline-none text-gray-900 font-bold p-2 rounded-xl">
-                            <option value="ON">🟢 ON (Wajib Absen di Radius)</option>
-                            <option value="OFF">🔴 OFF (Bebas Absen Dimana Saja)</option>
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2 mt-2">
-                        <div class="bg-white/10 p-3 rounded-2xl">
-                            <p class="text-[8px] text-gray-400 uppercase font-bold mb-1">Jam Buka</p>
-                            <input type="time" id="adm-start" class="w-full bg-transparent text-xs outline-none text-white font-bold">
-                        </div>
-                        <div class="bg-white/10 p-3 rounded-2xl">
-                            <p class="text-[8px] text-gray-400 uppercase font-bold mb-1">Jam Tutup</p>
-                            <input type="time" id="adm-end" class="w-full bg-transparent text-xs outline-none text-white font-bold">
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-2 items-center bg-white/10 p-2 rounded-2xl">
-                        <input type="number" id="adm-rad" placeholder="Radius (Meter)" class="flex-1 bg-transparent p-2 rounded-xl text-xs outline-none text-white font-bold">
-                        <button onclick="saveGPS()" class="bg-emerald-600 px-6 py-3 rounded-xl font-bold text-xs shadow-lg active:scale-95 transition-all">SIMPAN</button>
-                    </div>
+                <div class="bg-white/10 p-3 rounded-2xl">
+                    <p class="text-[8px] text-gray-400 uppercase font-bold mb-1">Longitude</p>
+                    <input type="number" step="any" id="adm-lng" class="w-full bg-transparent text-xs outline-none text-white font-bold">
                 </div>
             </div>
-        </main>
+
+            <div class="bg-white/10 p-3 rounded-2xl col-span-2">
+                <p class="text-[8px] text-gray-400 uppercase font-bold mb-1">Status GPS</p>
+                <select id="adm-gps" class="w-full bg-white text-xs outline-none text-gray-900 font-bold p-2 rounded-xl">
+                    <option value="ON">🟢 ON (Wajib Absen di Radius)</option>
+                    <option value="OFF">🔴 OFF (Bebas Absen Dimana Saja)</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                <div class="bg-white/10 p-3 rounded-2xl">
+                    <p class="text-[8px] text-gray-400 uppercase font-bold mb-1">Jam Buka</p>
+                    <input type="time" id="adm-start" class="w-full bg-transparent text-xs outline-none text-white font-bold">
+                </div>
+                <div class="bg-white/10 p-3 rounded-2xl">
+                    <p class="text-[8px] text-gray-400 uppercase font-bold mb-1">Jam Tutup</p>
+                    <input type="time" id="adm-end" class="w-full bg-transparent text-xs outline-none text-white font-bold">
+                </div>
+            </div>
+            
+            <div class="flex gap-2 items-center bg-white/10 p-2 rounded-2xl">
+                <input type="number" id="adm-rad" placeholder="Radius (Meter)" class="flex-1 bg-transparent p-2 rounded-xl text-xs outline-none text-white font-bold">
+                <button onclick="saveGPS()" class="bg-emerald-600 px-6 py-3 rounded-xl font-bold text-xs shadow-lg active:scale-95 transition-all">SIMPAN</button>
+            </div>
+        </div>
+    </div>
+</main>
 
         <main id="tab-pegawai" class="tab-content p-6 space-y-6 pb-24">
             <div class="flex justify-between items-center">
@@ -681,6 +693,8 @@
                 if (!showUserMarker) userPosMarker.setOpacity(0); 
             } else {
                 userOfficeCircle.setRadius(sRad);
+                userOfficeCircle.setLatLng([sLat, sLng]); // UPDATE OTOMATIS JIKA BERUBAH
+                userOfficeMarker.setLatLng([sLat, sLng]);
                 if (showUserMarker) {
                     userPosMarker.setLatLng([pLat, pLng]);
                     userPosMarker.setOpacity(1); 
@@ -899,138 +913,182 @@
         }
 
         function refreshData() {
-            if (!user) return;
-            callGAS('getDashboardData', { userId: user.id, role: user.role }, function(res) {
-                
-                if (res.settings) {
-                    var s = res.settings;
-                    office.rad = parseInt(s.radius || office.rad) || 100;
-                    office.gpsReq = s.gps_required || 'ON';
-                    try { localStorage.setItem('presensi_office_v3', JSON.stringify(office)); } catch(e){}
-                    
-                    var startInput = document.getElementById('adm-start');
-                    var endInput = document.getElementById('adm-end');
-                    var gpsInput = document.getElementById('adm-gps');
-                    var radInput = document.getElementById('adm-rad');
-                    
-                    if (startInput) startInput.value = s.time_start || '05:30';
-                    if (endInput) endInput.value = s.time_end || '07:00';
-                    if (gpsInput) gpsInput.value = office.gpsReq;
-                    if (radInput) radInput.value = office.rad;
-                }
-                
-                if (user.role === 'GTK') {
-                    if (document.getElementById('tab-home').classList.contains('active')) initUserMap(office.rad);
-                    
-                    var btnMasuk = document.getElementById('btnAbsenMasuk');
-                    var btnIzin = document.getElementById('btnIzin');
-                    
-                    if (btnMasuk && res.todayServer) {
-                        var historyHariIni = res.history.find(function(h) { return String(h[2]).trim() === String(res.todayServer).trim(); });
-                        
-                        if (historyHariIni) {
-                            var sts = historyHariIni[9] || 'Hadir'; 
-                            var stsText = sts === 'Hadir' ? 'SUDAH ABSEN PIKET' : ('SUDAH ' + String(sts).toUpperCase());
-                            
-                            btnMasuk.disabled = true; btnMasuk.onclick = null;
-                            btnMasuk.classList.replace('text-emerald-600', 'text-gray-400');
-                            btnMasuk.innerHTML = '<i class="fas fa-check-circle"></i> ' + stsText;
-                            
-                            if(btnIzin) { 
-                                btnIzin.disabled = true; btnIzin.onclick = null; 
-                                btnIzin.classList.replace('bg-amber-500', 'bg-gray-300'); 
-                                btnIzin.innerHTML = '<i class="fas fa-lock"></i> IZIN DITUTUP'; 
-                                btnIzin.style.display = 'flex'; 
-                            }
-                        } else {
-                            btnMasuk.disabled = false; btnMasuk.onclick = function() { startAttendance('IN'); };
-                            btnMasuk.classList.replace('text-gray-400', 'text-emerald-600');
-                            btnMasuk.innerHTML = '<i class="fas fa-camera"></i> ABSEN PIKET Sholat Dhuha';
-                            
-                            if(btnIzin) { 
-                                btnIzin.disabled = false; btnIzin.onclick = function() { openPermitModal(); }; 
-                                btnIzin.classList.replace('bg-gray-300', 'bg-amber-500'); 
-                                btnIzin.innerHTML = '<i class="fas fa-file-medical"></i> IZIN / SAKIT'; 
-                                btnIzin.style.display = 'flex'; 
-                            }
-                        }
-                    }
+    if (!user) return;
+    callGAS('getDashboardData', { userId: user.id, role: user.role }, function(res) {
+        
+        if (res.settings) {
+            var s = res.settings;
+            office.rad = parseInt(s.radius || office.rad) || 100;
+            office.gpsReq = s.gps_required || 'ON';
+            
+            // --- 1. BACA KOORDINAT DARI SPREADSHEET ---
+            if (s.latitude) KANTOR_LAT = parseFloat(s.latitude);
+            if (s.longitude) KANTOR_LNG = parseFloat(s.longitude);
+            office.lat = KANTOR_LAT;
+            office.lng = KANTOR_LNG;
+            
+            try { localStorage.setItem('presensi_office_v3', JSON.stringify(office)); } catch(e){}
+            
+            // PERBARUI TEKS KOORDINAT DI HALAMAN SETTING
+            var textKoordinat = document.getElementById('text-koordinat');
+            if (textKoordinat) textKoordinat.innerText = KANTOR_LAT + ", " + KANTOR_LNG;
 
-                    var historyDiv = document.getElementById('userHistory');
-                    if (res.history && res.history.length > 0) {
-                        var hHtml = "";
-                        for(var i=0; i<res.history.length; i++){
-                            var h = res.history[i];
-                            var stsText = h[9] || 'Hadir';
-                            var bColor = stsText === 'Hadir' ? 'bg-indigo-50 text-indigo-600' : 'bg-amber-50 text-amber-600';
-                            var linkFoto = h[10] ? '<button onclick="openImageModal(\''+h[10]+'\')" class="bg-emerald-50 text-emerald-600 px-2 py-1 rounded-md text-[9px] font-black active:scale-95 transition-all"><i class="fas fa-image"></i> Cek</button>' : '';
-                            
-                            hHtml += '<div class="bg-white p-4 rounded-2xl border border-gray-100 flex justify-between items-center shadow-sm">' +
-                                     '<div><p class="text-[10px] font-black text-emerald-600">' + h[2] + '</p>' +
-                                     '<div class="flex items-center gap-2 mt-0.5"><h4 class="font-bold text-gray-900">' + h[3] + '</h4>' + linkFoto +
-                                     '</div></div><span class="px-3 py-1 rounded-lg text-[9px] font-bold uppercase '+bColor+'">' + stsText + '</span></div>';
-                        }
-                        historyDiv.innerHTML = hHtml;
-                    } else {
-                        historyDiv.innerHTML = '<p class="text-center text-xs py-4 text-gray-400">Belum ada riwayat</p>';
-                    }
+            var startInput = document.getElementById('adm-start');
+            var endInput = document.getElementById('adm-end');
+            var gpsInput = document.getElementById('adm-gps');
+            var radInput = document.getElementById('adm-rad');
+            var latInput = document.getElementById('adm-lat');
+            var lngInput = document.getElementById('adm-lng');
+            
+            // --- 2. FUNGSI AMAN UNTUK FORMAT JAM DARI SPREADSHEET ---
+            function formatWaktuAman(w) {
+                if(!w) return '';
+                var str = String(w).replace(/'/g, '').trim();
+                // Jika Google Sheet mengubahnya jadi Format Tanggal (ex: 1899-12-30T18:00...)
+                if(str.indexOf('T') !== -1) {
+                    var d = new Date(str);
+                    return String(d.getHours()).padStart(2, '0') + ":" + String(d.getMinutes()).padStart(2, '0');
                 }
+                return str.substring(0, 5); // Ambil format HH:mm saja
+            }
 
-                if (user.role === 'admin' || user.role === 'pimpinan') {
-                    if (res.monitoring) {
-                        document.getElementById('mon-hari').innerText = res.monitoring.hari;
-                        document.getElementById('mon-hadir').innerText = res.monitoring.hadir + " / " + res.monitoring.totalJadwal;
-                        
-                        var listHadir = document.getElementById('mon-list-hadir');
-                        var listBelum = document.getElementById('mon-list-belum');
-                        
-                        if (res.monitoring.list && res.monitoring.list.length > 0) {
-                            var hHtml = "", bHtml = "";
-                            
-                            for(var m=0; m<res.monitoring.list.length; m++){
-                                var gtk = res.monitoring.list[m];
-                                if (gtk.hadir) {
-                                    var isHadirNormal = (gtk.status === 'Hadir' || gtk.status === '');
-                                    var badgeColor = isHadirNormal ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
-                                    var badgeText = isHadirNormal ? 'Hadir' : gtk.status;
-                                    var stsBadge = '<br><span class="px-2 py-0.5 rounded text-[8px] font-black uppercase inline-block mt-1 ' + badgeColor + '">' + badgeText + '</span>';
-                                    var linkFoto = gtk.foto ? '<button onclick="openImageModal(\''+gtk.foto+'\')" class="text-blue-500 font-bold text-[10px] active:scale-95 bg-blue-50 px-2 py-1 rounded-md"><i class="fas fa-image"></i> Cek</button>' : '<span class="text-gray-300">-</span>';
-                                    
-                                    // TERJEMAHAN NAMA MONITORING (HADIR)
-                                    hHtml += '<tr class="bg-white border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + getRealName(gtk.nama) + stsBadge + '</td><td class="py-3 px-3 text-center text-gray-600">' + gtk.hari + '</td><td class="py-3 px-3 text-center">' + linkFoto + '</td></tr>';
-                                } else {
-                                    // TERJEMAHAN NAMA MONITORING (BELUM)
-                                    bHtml += '<tr class="bg-gray-50 border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + getRealName(gtk.nama) + '</td><td class="py-3 px-3 text-center text-gray-600">' + gtk.hari + '</td><td class="py-3 px-3 text-center"><span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-[9px] font-black uppercase">Belum Hadir</span></td></tr>';
-                                }
-                            }
-                            
-                            listHadir.innerHTML = hHtml || '<tr><td colspan="3" class="py-4 text-center text-gray-400 font-bold">Belum ada GTK yang hadir</td></tr>';
-                            listBelum.innerHTML = bHtml || '<tr><td colspan="3" class="py-4 text-center text-gray-400 font-bold">Semua GTK sudah hadir!</td></tr>';
-                        } else {
-                            listHadir.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-500 font-bold">Tidak ada jadwal piket hari ini.</td></tr>';
-                            listBelum.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-500 font-bold">Tidak ada jadwal piket hari ini.</td></tr>';
-                        }
-                    }
-                }
-                updateGPSUI();
-            });
+            if (startInput) startInput.value = formatWaktuAman(s.time_start) || '05:30';
+            if (endInput) endInput.value = formatWaktuAman(s.time_end) || '07:00';
+            if (gpsInput) gpsInput.value = office.gpsReq;
+            if (radInput) radInput.value = office.rad;
+            if (latInput) latInput.value = KANTOR_LAT;
+            if (lngInput) lngInput.value = KANTOR_LNG;
         }
+        
+        if (user.role === 'GTK') {
+            if (document.getElementById('tab-home').classList.contains('active')) initUserMap(office.rad);
+            
+            var btnMasuk = document.getElementById('btnAbsenMasuk');
+            var btnIzin = document.getElementById('btnIzin');
+            
+            if (btnMasuk && res.todayServer) {
+                var historyHariIni = res.history.find(function(h) { return String(h[2]).trim() === String(res.todayServer).trim(); });
+                
+                if (historyHariIni) {
+                    var sts = historyHariIni[9] || 'Hadir'; 
+                    var stsText = sts === 'Hadir' ? 'SUDAH ABSEN PIKET' : ('SUDAH ' + String(sts).toUpperCase());
+                    
+                    btnMasuk.disabled = true; btnMasuk.onclick = null;
+                    btnMasuk.classList.replace('text-emerald-600', 'text-gray-400');
+                    btnMasuk.innerHTML = '<i class="fas fa-check-circle"></i> ' + stsText;
+                    
+                    if(btnIzin) { 
+                        btnIzin.disabled = true; btnIzin.onclick = null; 
+                        btnIzin.classList.replace('bg-amber-500', 'bg-gray-300'); 
+                        btnIzin.innerHTML = '<i class="fas fa-lock"></i> IZIN DITUTUP'; 
+                        btnIzin.style.display = 'flex'; 
+                    }
+                } else {
+                    btnMasuk.disabled = false; btnMasuk.onclick = function() { startAttendance('IN'); };
+                    btnMasuk.classList.replace('text-gray-400', 'text-emerald-600');
+                    btnMasuk.innerHTML = '<i class="fas fa-camera"></i> ABSEN PIKET Sholat Dhuha';
+                    
+                    if(btnIzin) { 
+                        btnIzin.disabled = false; btnIzin.onclick = function() { openPermitModal(); }; 
+                        btnIzin.classList.replace('bg-gray-300', 'bg-amber-500'); 
+                        btnIzin.innerHTML = '<i class="fas fa-file-medical"></i> IZIN / SAKIT'; 
+                        btnIzin.style.display = 'flex'; 
+                    }
+                }
+            }
+
+            var historyDiv = document.getElementById('userHistory');
+            if (res.history && res.history.length > 0) {
+                var hHtml = "";
+                for(var i=0; i<res.history.length; i++){
+                    var h = res.history[i];
+                    var stsText = h[9] || 'Hadir';
+                    var bColor = stsText === 'Hadir' ? 'bg-indigo-50 text-indigo-600' : 'bg-amber-50 text-amber-600';
+                    var linkFoto = h[10] ? '<button onclick="openImageModal(\''+h[10]+'\')" class="bg-emerald-50 text-emerald-600 px-2 py-1 rounded-md text-[9px] font-black active:scale-95 transition-all"><i class="fas fa-image"></i> Cek</button>' : '';
+                    
+                    hHtml += '<div class="bg-white p-4 rounded-2xl border border-gray-100 flex justify-between items-center shadow-sm">' +
+                             '<div><p class="text-[10px] font-black text-emerald-600">' + h[2] + '</p>' +
+                             '<div class="flex items-center gap-2 mt-0.5"><h4 class="font-bold text-gray-900">' + h[3] + '</h4>' + linkFoto +
+                             '</div></div><span class="px-3 py-1 rounded-lg text-[9px] font-bold uppercase '+bColor+'">' + stsText + '</span></div>';
+                }
+                historyDiv.innerHTML = hHtml;
+            } else {
+                historyDiv.innerHTML = '<p class="text-center text-xs py-4 text-gray-400">Belum ada riwayat</p>';
+            }
+        }
+
+        if (user.role === 'admin' || user.role === 'pimpinan') {
+            if (res.monitoring) {
+                document.getElementById('mon-hari').innerText = res.monitoring.hari;
+                document.getElementById('mon-hadir').innerText = res.monitoring.hadir + " / " + res.monitoring.totalJadwal;
+                
+                var listHadir = document.getElementById('mon-list-hadir');
+                var listBelum = document.getElementById('mon-list-belum');
+                
+                if (res.monitoring.list && res.monitoring.list.length > 0) {
+                    var hHtml = "", bHtml = "";
+                    
+                    for(var m=0; m<res.monitoring.list.length; m++){
+                        var gtk = res.monitoring.list[m];
+                        if (gtk.hadir) {
+                            var isHadirNormal = (gtk.status === 'Hadir' || gtk.status === '');
+                            var badgeColor = isHadirNormal ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
+                            var badgeText = isHadirNormal ? 'Hadir' : gtk.status;
+                            var stsBadge = '<br><span class="px-2 py-0.5 rounded text-[8px] font-black uppercase inline-block mt-1 ' + badgeColor + '">' + badgeText + '</span>';
+                            var linkFoto = gtk.foto ? '<button onclick="openImageModal(\''+gtk.foto+'\')" class="text-blue-500 font-bold text-[10px] active:scale-95 bg-blue-50 px-2 py-1 rounded-md"><i class="fas fa-image"></i> Cek</button>' : '<span class="text-gray-300">-</span>';
+                            
+                            // TERJEMAHAN NAMA MONITORING (HADIR)
+                            hHtml += '<tr class="bg-white border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + getRealName(gtk.nama) + stsBadge + '</td><td class="py-3 px-3 text-center text-gray-600">' + gtk.hari + '</td><td class="py-3 px-3 text-center">' + linkFoto + '</td></tr>';
+                        } else {
+                            // TERJEMAHAN NAMA MONITORING (BELUM)
+                            bHtml += '<tr class="bg-gray-50 border-b border-gray-100"><td class="py-3 px-3 font-bold text-gray-900">' + getRealName(gtk.nama) + '</td><td class="py-3 px-3 text-center text-gray-600">' + gtk.hari + '</td><td class="py-3 px-3 text-center"><span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-[9px] font-black uppercase">Belum Hadir</span></td></tr>';
+                        }
+                    }
+                    
+                    listHadir.innerHTML = hHtml || '<tr><td colspan="3" class="py-4 text-center text-gray-400 font-bold">Belum ada GTK yang hadir</td></tr>';
+                    listBelum.innerHTML = bHtml || '<tr><td colspan="3" class="py-4 text-center text-gray-400 font-bold">Semua GTK sudah hadir!</td></tr>';
+                } else {
+                    listHadir.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-500 font-bold">Tidak ada jadwal piket hari ini.</td></tr>';
+                    listBelum.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-500 font-bold">Tidak ada jadwal piket hari ini.</td></tr>';
+                }
+            }
+        }
+        updateGPSUI();
+    });
+}
 
         function saveGPS() {
-            var rd = document.getElementById('adm-rad').value;
-            var st = document.getElementById('adm-start').value;
-            var en = document.getElementById('adm-end').value;
-            var gpsReq = document.getElementById('adm-gps').value;
-            if (!rd || !st || !en) return showToast("Isi semua data termasuk jam!");
+    var rd = document.getElementById('adm-rad').value;
+    var st = document.getElementById('adm-start').value;
+    var en = document.getElementById('adm-end').value;
+    var gpsReq = document.getElementById('adm-gps').value;
+    var lat = document.getElementById('adm-lat').value;
+    var lng = document.getElementById('adm-lng').value;
+    
+    if (!rd || !st || !en || !lat || !lng) return showToast("Isi semua data termasuk jam dan koordinat!");
 
-            office.rad = parseInt(rd); office.gpsReq = gpsReq;
-            try { localStorage.setItem('presensi_office_v3', JSON.stringify(office)); } catch(e){}
+    // Update variable internal
+    office.rad = parseInt(rd); 
+    office.gpsReq = gpsReq;
+    office.lat = parseFloat(lat);
+    office.lng = parseFloat(lng);
+    KANTOR_LAT = office.lat;
+    KANTOR_LNG = office.lng;
+    
+    try { localStorage.setItem('presensi_office_v3', JSON.stringify(office)); } catch(e){}
 
-            showToast("Menyimpan...");
-            callGAS('updateOfficeSettings', { radius: rd, timeStart: st, timeEnd: en, gpsReq: gpsReq }, function(res) {
-                showToast(res.message); refreshData(); 
-            });
-        }
+    showToast("Menyimpan...");
+    // Kirim latitude dan longitude ke backend
+    callGAS('updateOfficeSettings', { 
+        radius: rd, 
+        timeStart: st, 
+        timeEnd: en, 
+        gpsReq: gpsReq, 
+        latitude: lat, 
+        longitude: lng 
+    }, function(res) {
+        showToast(res.message); refreshData(); 
+    });
 
         function loadPegawaiData() {
             document.getElementById('adminUserTable').innerHTML = '<tr><td colspan="5" class="py-8 text-center text-gray-400">Memuat data...</td></tr>';
