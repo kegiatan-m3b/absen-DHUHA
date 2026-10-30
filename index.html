@@ -382,7 +382,7 @@
         // ========================================================
         // 1. SETTING URL GOOGLE APPS SCRIPT ANDA DI SINI
         // ========================================================
-        var GAS_URL = "https://script.google.com/macros/s/AKfycbwUGzLAozoiwj1EvfKHSweVhE71wOjbsQbzsMzhpJMSu5RzJ8INnCLx2CR5U_YW1CpD5g/exec";
+        var GAS_URL = "https://script.google.com/macros/s/AKfycbzlc-6JbiQWvO04v3K3-6S7UC08-6SzyYnc5GHZurZI_bVwXHSXyseObFvvKWTxBDX9xg/exec";
         
         // KAMUS GLOBAL UNTUK MENGUBAH UUID JADI NAMA ASLI
         var globalGtkMap = {};
@@ -1145,10 +1145,15 @@
                             var ctx = can.getContext('2d');
                             ctx.drawImage(img, 0, 0, can.width, can.height);
                             
+                            // PERUBAHAN: Menambah tinggi box hitam menjadi 115 untuk ruang nama
                             ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-                            ctx.fillRect(0, can.height - 90, can.width, 90);
+                            ctx.fillRect(0, can.height - 115, can.width, 115);
                             ctx.fillStyle = "white"; ctx.font = "bold 15px Arial"; ctx.shadowColor = "rgba(0,0,0,0.8)"; ctx.shadowBlur = 4;
                             var now = new Date(); var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                            
+                            // TAMBAHAN: Mencetak Nama GTK di baris paling atas
+                            var namaAsli = getRealName(user.nama);
+                            ctx.fillText("👤 " + namaAsli, 15, can.height - 90);
                             
                             ctx.fillText("⭐ Absensi Piket Sholat Dhuha MTsN 3 BWI", 15, can.height - 65);
                             ctx.fillText("🕒 " + days[now.getDay()] + ", " + now.toLocaleDateString('id-ID') + " - " + now.toLocaleTimeString('id-ID'), 15, can.height - 40);
