@@ -382,7 +382,7 @@
         // ========================================================
         // 1. SETTING URL GOOGLE APPS SCRIPT ANDA DI SINI
         // ========================================================
-        var GAS_URL = "https://script.google.com/macros/s/AKfycbwbO9ZXzOBmbLXZGTBPbUmXFw6O3FD9LOFWJRBho2DSoY_wVPYHowusuCHd0W_d1zzBjg/exec";
+        var GAS_URL = "https://script.google.com/macros/s/AKfycbxXxDf6HWyyg_A2IMQBixsXr49jELJW8UeNCE5L2PJucLjwtGVJ_KI8eMQLuQh2KuIiaQ/exec";
         
         // KAMUS GLOBAL UNTUK MENGUBAH UUID JADI NAMA ASLI
         var globalGtkMap = {};
@@ -1146,13 +1146,11 @@
                             var ctx = can.getContext('2d');
                             ctx.drawImage(img, 0, 0, can.width, can.height);
                             
-                            // PERUBAHAN: Menambah tinggi box hitam menjadi 115 untuk ruang nama
                             ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
                             ctx.fillRect(0, can.height - 115, can.width, 115);
                             ctx.fillStyle = "white"; ctx.font = "bold 15px Arial"; ctx.shadowColor = "rgba(0,0,0,0.8)"; ctx.shadowBlur = 4;
                             var now = new Date(); var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
                             
-                            // TAMBAHAN: Mencetak Nama GTK di baris paling atas
                             var namaAsli = getRealName(user.nama);
                             ctx.fillText("👤 " + namaAsli, 15, can.height - 90);
                             
@@ -1164,8 +1162,30 @@
                             showToast("📤 Mengirim absensi piket...");
                             
                             callGAS('submitAttendance', { type: attType, lat: currentLoc.lat, lng: currentLoc.lng, userId: user.id, selfieData: dataUrl }, function(res) {
-                                showToast(res.message); if (res.success) refreshData();
-                            }, function() { showToast("Gagal mengirim absensi. Coba lagi."); });
+                                showToast(res.message); 
+                                
+                                // PERUBAHAN BARU: LANGSUNG MATIKAN TOMBOL JIKA ABSEN BERHASIL
+                                if (res.success) {
+                                    var btnMasuk = document.getElementById('btnAbsenMasuk');
+                                    var btnIzin = document.getElementById('btnIzin');
+                                    
+                                    if(btnMasuk) {
+                                        btnMasuk.disabled = true; 
+                                        btnMasuk.onclick = null;
+                                        btnMasuk.classList.replace('text-emerald-600', 'text-gray-400');
+                                        btnMasuk.innerHTML = '<i class="fas fa-check-circle"></i> SUDAH ABSEN';
+                                    }
+                                    if(btnIzin) {
+                                        btnIzin.disabled = true;
+                                        btnIzin.onclick = null;
+                                        btnIzin.classList.replace('bg-amber-500', 'bg-gray-300');
+                                        btnIzin.innerHTML = '<i class="fas fa-lock"></i> IZIN DITUTUP';
+                                    }
+                                    refreshData(); 
+                                }
+                            }, function(err) { 
+                                showToast("Error Sistem: " + err); 
+                            });
                         }
 
                         if (isGpsWajib) {
