@@ -591,9 +591,10 @@
                         setupApp();
                     } else { showToast(res.message || "Gagal Login"); }
                 }, function(err) { 
-                    btn.innerHTML = 'MASUK APLIKASI'; btn.disabled = false;
-                    showToast("Koneksi gagal! Silakan refresh browser."); 
-                });
+    btn.innerHTML = 'MASUK APLIKASI'; btn.disabled = false;
+    // Ini akan memunculkan sumber masalah aslinya ke layar Anda
+    showToast("Error Sistem: " + err); 
+});
             } catch(e) { showToast("Error: " + e.message); }
         }
 
